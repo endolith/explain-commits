@@ -3,17 +3,18 @@ import git
 import os
 
 
-def latest_commit_to_file(repo_path):
+def commit_to_file(repo_path, commit_hash=None):
     repo = git.Repo(repo_path)
 
-    # Get the latest commit
-    commit = repo.head.commit
+    # Get the specified commit, or default to the latest commit
+    commit = repo.commit(commit_hash) if commit_hash else repo.head.commit
 
     # Get the commit message
     commit_message = commit.message
 
     # Get the diff
-    diff = commit.diff('HEAD~1', create_patch=True)
+    parent = commit.parents[0] if commit.parents else None
+    diff = commit.diff(parent, create_patch=True)
 
     diff_text = "".join(d.__str__() for d in diff.iter_change_type('M'))
 
@@ -30,9 +31,12 @@ def latest_commit_to_file(repo_path):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description="Write latest commit info to a file.")
+        description="Write commit info to a file.")
     parser.add_argument("path", help="Path to the git repository.")
+    parser.add_argument("-c", "--commit",
+                        help="Specific commit hash. If not specified, "
+                        "defaults to the latest commit.")
 
     args = parser.parse_args()
 
-    latest_commit_to_file(args.path)
+    commit_to_file(args.path, args.commit)
