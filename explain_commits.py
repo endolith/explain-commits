@@ -17,7 +17,7 @@ def commit_to_file(repo_path, commit_hash=None,
 
     diff_text = ""
     if diff:
-        for d in diff.iter_change_type('M'):
+        for d in diff.iter_change_type('M'):  # paths with modified data
             if d.a_path.endswith(include_extensions):
                 diff_text += d.__str__()
 
