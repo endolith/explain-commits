@@ -49,7 +49,7 @@ def send_to_gpt_and_save(diff_text, repo_path, commit_hash):
     user_message = diff_text
 
     response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
+        model="gpt-3.5-turbo-16k",
         messages=[
             {"role": "system", "content": system_message},
             {"role": "user", "content": user_message}
