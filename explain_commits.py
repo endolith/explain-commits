@@ -2,6 +2,9 @@ import argparse
 import os
 
 import git
+import openai
+
+openai.api_key = 'your-api-key'  # Replace 'your-api-key' with your actual key
 
 
 def commit_to_file(repo_path, commit_hash=None,
@@ -36,6 +39,25 @@ def commit_to_file(repo_path, commit_hash=None,
             f.write("Diff:\n" + diff_text)
 
     print(f"Commit information written to {output_file}")
+
+    # Send the diff to GPT API
+    send_to_gpt(diff_text)
+
+
+def send_to_gpt(diff_text):
+    system_message = "You are a skilled software engineer with expertise in automated code harmonization. You can understand the differences between files and apply similar changes to different files. Your task is to explain code diffs in plain English, elaborating on what they do and why they were made, to the best of your ability. Be prepared to answer follow-up questions about your explanations. Don't just summarize or paraphrase the changes in a list. Respond using Markdown."
+    user_message = diff_text
+
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=[
+            {"role": "system", "content": system_message},
+            {"role": "user", "content": user_message}
+        ]
+    )
+
+    # Print the assistant's response
+    print(response.choices[0].message['content'])
 
 
 if __name__ == "__main__":
