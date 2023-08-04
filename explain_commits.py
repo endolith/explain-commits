@@ -20,6 +20,10 @@ def commit_to_file(repo_path, commit_hash=None,
         for d in diff.iter_change_type('M'):  # paths with modified data
             if d.a_path.endswith(include_extensions):
                 diff_text += d.__str__()
+            else:
+                # Short summary of changes for binary files, etc.
+                diff_text += "\n".join(d.__str__().splitlines()[:4])
+                diff_text += '\n[…]\n\n'
 
     # Define output file name
     output_file = os.path.join(repo_path, f"{commit.hexsha}.txt")
