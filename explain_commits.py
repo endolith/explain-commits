@@ -82,5 +82,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
     include_extensions = tuple(args.include.split(','))
 
-    commit_hash, commit_message, diff_text = get_diff_text(args.path, args.commit, include_extensions)
+    commit_hash, commit_message, diff_text = get_diff_text(
+        args.path, args.commit, include_extensions)
     send_to_gpt_and_save(commit_hash, commit_message, diff_text, args.path)
