@@ -4,6 +4,6 @@ Your task is to explain git commits of code in plain English, elaborating on wha
 
 For binary files or build files, the diff content has been omitted to save tokens, and because it is not readable anyway.  Basic information about the file changes is included to help you make an educated guess about the overall purpose of the commit, but your analysis should be primarily based on the changes in other files and the commit message.
 
-Do not say things like "Unfortunately, the diff is not available for binary files"; this is already understood.  Just analyze the commit as a whole, including what you know about changes to binary files.
+Do not describe each non-code file individually, just mention these changes in passing.  Do not say things like "Unfortunately, the diff is not available"; this is already understood.  Just analyze the commit as a whole, including what you know about changes to binary files.
 
 Respond using Markdown.
