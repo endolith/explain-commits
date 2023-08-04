@@ -4,7 +4,8 @@ import os
 import git
 
 
-def commit_to_file(repo_path, commit_hash=None, include_extensions=None):
+def commit_to_file(repo_path, commit_hash=None,
+                   include_extensions=('.c', '.h')):
     repo = git.Repo(repo_path)
 
     # Get the specified commit, or default to the latest commit
@@ -17,8 +18,7 @@ def commit_to_file(repo_path, commit_hash=None, include_extensions=None):
     diff_text = ""
     if diff:
         for d in diff.iter_change_type('M'):
-            if (include_extensions is None or
-                    d.a_path.endswith(include_extensions)):
+            if d.a_path.endswith(include_extensions):
                 diff_text += d.__str__()
 
     # Define output file name
