@@ -34,19 +34,16 @@ def get_diff_text(repo_path, commit_hash=None,
                 diff_text += "\n".join(d.__str__().splitlines()[:5])
                 diff_text += '\n[…]\n\n'
 
-    return ("Commit Message:\n```\n" +
-            commit.message +
-            "\n```\n\nDiff:\n```diff\n" +
-            diff_text +
-            '\n```')
+    return commit.hexsha, commit.message, diff_text
 
 
-def send_to_gpt_and_save(diff_text, repo_path, commit_hash):
+def send_to_gpt_and_save(commit_hash, commit_message, diff_text, repo_path):
     with open(os.path.join(os.path.dirname(__file__),
                            'system_message.txt'), 'r') as file:
         system_message = file.read()
 
-    user_message = diff_text
+    user_message = "Commit Message:\n```\n" + commit_message + \
+                   "\n```\n\nDiff:\n```diff\n" + diff_text + '\n```'
 
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo-16k",
@@ -85,5 +82,5 @@ if __name__ == "__main__":
     args = parser.parse_args()
     include_extensions = tuple(args.include.split(','))
 
-    diff_text = get_diff_text(args.path, args.commit, include_extensions)
-    send_to_gpt_and_save(diff_text, args.path, args.commit)
+    commit_hash, commit_message, diff_text = get_diff_text(args.path, args.commit, include_extensions)
+    send_to_gpt_and_save(commit_hash, commit_message, diff_text, args.path)
