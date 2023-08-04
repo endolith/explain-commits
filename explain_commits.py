@@ -17,13 +17,14 @@ def commit_to_file(repo_path, commit_hash=None,
 
     diff_text = ""
     if diff:
-        for d in diff.iter_change_type('M'):  # paths with modified data
+        for d in diff:
             if d.a_path.endswith(include_extensions):
                 diff_text += d.__str__()
             else:
-                # Short summary of changes for binary files, etc.
-                diff_text += "\n".join(d.__str__().splitlines()[:4])
-                diff_text += '\n[…]\n\n'
+                # Short summary of changes for binary files, etc. [:5] includes
+                # "---Binary files … differ", "file deleted in rhs", etc.
+                diff_text += "\n".join(d.__str__().splitlines()[:5])
+                diff_text += '\n[…]\n\n'  # […] is a single token ;)
 
     # Define output file name
     output_file = os.path.join(repo_path, f"{commit.hexsha}.txt")
