@@ -26,7 +26,11 @@ def get_diff_text(repo_path, commit_hash=None,
     diff_text = ""
     if diff:
         for d in diff:
-            if d.a_path.endswith(include_extensions):
+            if d.a_path is None:
+                diff_text += f"File added: {d.b_path}\n"
+            elif d.b_path is None:
+                diff_text += f"File deleted: {d.a_path}\n"
+            elif d.a_path.endswith(include_extensions):
                 diff_text += d.__str__() + '\n\n'
             else:
                 # Short summary of changes for binary files, etc. [:5] includes
