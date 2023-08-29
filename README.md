@@ -1,6 +1,6 @@
-# Git Commit Analyzer with GPT-3
+# GPT Explain Commits
 
-This script analyzes a specific git commit or the latest commit in a repository. It fetches the commit message and code diffs, writes them to a text file, and also sends the diffs to OpenAI's GPT-3 for a natural language explanation.
+This script analyzes a specific git commit or the latest commit in a repository. It fetches the commit message and code diffs, and sends them to OpenAI's ChatGPT for a natural language explanation.
 
 ## Installation
 
@@ -17,7 +17,7 @@ This script analyzes a specific git commit or the latest commit in a repository.
     cp .env.template .env
     ```
 
-4. Add your OpenAI API key in the `.env` file.
+4. Add your [OpenAI API key](https://platform.openai.com/account/api-keys) in the `.env` file.
 
 ## Usage
 
@@ -25,7 +25,7 @@ This script analyzes a specific git commit or the latest commit in a repository.
 
 - `path`: Path to the git repository.
 - `-c`, `--commit`: Specific commit hash. Defaults to the latest commit if not specified.
-- `-i`, `--include`: Comma-separated list of file extensions to include. Defaults to `.c,.h`.
+- `-i`, `--include`: Comma-separated whitelist of file extensions to include. Defaults to `.c,.h,.py,.htm`.
 
 ### Example
 
@@ -43,10 +43,10 @@ python explain_commits.py [repository_path]
 
 ### SmartGit Integration
 
-1. Open SmartGit and navigate to `Tools -> Open Tools`.
+1. Open SmartGit and navigate to **Edit** → **Preferences** → **Tools**.
 2. Add a new tool with the following settings:
-    - Command: Path to Python executable
-    - Arguments: `"F:\Language models\explain_commits\explain_commits.py" -c ${commit} ${repositoryRootPath}`
-    - Title: "GPT analyze commit"
+    - **Menu Item Name**: "GPT explain commit"
+    - **Command**: Path to Python executable
+    - **Arguments**: `"[…]\explain_commits.py" -c ${commit} ${repositoryRootPath}`
 
-Run this tool from SmartGit to analyze a commit.
+Then this tool is available on the context menu for commits, which will output a `.md` file to the repo folder.
