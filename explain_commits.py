@@ -27,7 +27,7 @@ def get_diff_text(repo_path, commit_hash=None,
     if diff:
         for d in diff:
             if d.a_path.endswith(include_extensions):
-                diff_text += d.__str__()
+                diff_text += d.__str__() + '\n\n'
             else:
                 # Short summary of changes for binary files, etc. [:5] includes
                 # "---Binary files … differ", "file deleted in rhs", etc.
