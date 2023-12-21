@@ -62,7 +62,8 @@ def send_to_gpt_and_save(commit_hash, commit_message, diff_text, repo_path):
         ]
     )
 
-    assistant_response = response.choices[0].message['content']
+    # Corrected line to access the assistant's response
+    assistant_response = response.choices[0].message.content
 
     conversation = '## System Message\n\n' + system_message + \
                    '\n\n## User Message\n\n' + user_message + \
