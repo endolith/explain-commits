@@ -2,14 +2,14 @@ import argparse
 import os
 
 import git
-import openai
 from dotenv import load_dotenv
+from openai import OpenAI
 
 # Load .env file
 load_dotenv()
 
 # Fetch the API key from the .env file
-openai.api_key = os.getenv("OPENAI_API_KEY")
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 
 def get_diff_text(repo_path, commit_hash=None,
@@ -54,7 +54,7 @@ def send_to_gpt_and_save(commit_hash, commit_message, diff_text, repo_path):
     user_message = "Commit Message:\n```\n" + commit_message + \
                    "```\n\nDiff:\n```diff\n" + diff_text + '\n```'
 
-    response = openai.ChatCompletion.create(
+    response = client.chat.completions.create(
         model="gpt-3.5-turbo-16k",
         messages=[
             {"role": "system", "content": system_message},
