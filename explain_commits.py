@@ -1,4 +1,5 @@
 import argparse
+import mimetypes
 import os
 
 import git
@@ -21,27 +22,36 @@ def get_diff_text(repo_path, commit_hash=None,
 
     # Get the diff
     parent = commit.parents[0] if commit.parents else None
-    diff = parent.diff(commit, create_patch=True) if parent else None
+    diff = parent.diff(commit, create_patch=True) if parent else []
 
     diff_text = ""
-    if diff:
-        for d in diff:
-            try:
-                if d.a_path is None:  # File added
-                    diff_text += f"File added: {d.b_path}\n"
-                    diff_text += f"+ {d.b_blob.data_stream.read().decode('utf-8')}\n"
-                elif d.b_path is None:  # File deleted
-                    diff_text += f"File deleted: {d.a_path}\n"
-                    diff_text += f"- {d.a_blob.data_stream.read().decode('utf-8')}\n"
-                elif d.a_path.endswith(include_extensions):
-                    diff_text += d.__str__() + '\n\n'
+    for d in diff:
+        # Determine file paths
+        a_path = d.a_path if d.a_path else ""
+        b_path = d.b_path if d.b_path else ""
+        file_path = b_path if d.new_file or not d.deleted_file else a_path
+
+        # Guess MIME type of file based on its extension
+        mime_type, _ = mimetypes.guess_type(file_path)
+
+        try:
+            # Process text files based on MIME type
+            if mime_type and 'text' in mime_type:
+                # Get diff of the change
+                diff_data = d.diff.decode('utf-8')
+                diff_text += f"Diff for {file_path}:\n\n{diff_data}\n\n"
+            else:
+                # Handle binary/change type events
+                if d.new_file:
+                    diff_text += f"File added: {b_path} (binary or unspecified type)\n"
+                elif d.deleted_file:
+                    diff_text += f"File deleted: {a_path} (binary or unspecified type)\n"
                 else:
-                    # Short summary of changes for binary files, etc. [:5] includes
-                    # "---Binary files … differ", "file deleted in rhs", etc.
-                    diff_text += "\n".join(d.__str__().splitlines()[:5])
-                    diff_text += '\n[…]\n\n'
-            except UnicodeDecodeError:
-                print(f"UnicodeDecodeError in file: {d.a_path or d.b_path}")
+                    # If it's a modification, no need to display the content
+                    diff_text += f"File modified: {file_path} (binary or unspecified type)\n"
+        except UnicodeDecodeError as e:
+            # Exception handling for files that are detected as text but have encoding issues
+            diff_text += f"Error decoding file: {file_path} (may contain binary content or text with unknown encoding)\n"
 
     return commit.hexsha, commit.message, diff_text
 
