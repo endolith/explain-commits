@@ -57,6 +57,15 @@ def get_diff_text(repo_path, commit_hash=None,
 
 
 def send_to_gpt_and_save(commit_hash, commit_message, diff_text, repo_path):
+    # Create a file path for the diff
+    diff_file_path = os.path.join(repo_path, f"{commit_hash}_diff.txt")
+
+    # Save the diff to a text file
+    with open(diff_file_path, 'w', encoding='utf-8') as f:
+        f.write(diff_text)
+
+    print(f"Diff saved to {diff_file_path}")
+
     with open(os.path.join(os.path.dirname(__file__),
                            'system_message.txt'), 'r') as file:
         system_message = file.read()
