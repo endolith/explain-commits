@@ -1,6 +1,7 @@
 import argparse
 import os
 
+import chardet
 import git
 from dotenv import load_dotenv
 from openai import OpenAI
@@ -34,13 +35,23 @@ def get_diff_text(repo_path, commit_hash=None,
             continue
 
         try:
-            # Attempt to read the diff text if the file is text
-            if d.diff:  # Ensure that there is a diff to read
-                diff_data = d.diff.decode('utf-8')
-                diff_text += f"Diff for {file_path}:\n\n{diff_data}\n\n"
+            # Attempt to read the diff text
+            raw_diff_data = d.diff
+            if raw_diff_data:  # Ensure that there is a diff to read
+                # Use chardet to guess the encoding of the diff content
+                encoding_guess = chardet.detect(raw_diff_data)
+                encoding = encoding_guess['encoding']
+
+                if encoding:  # If chardet was able to guess an encoding
+                    diff_data = raw_diff_data.decode(encoding)
+                    diff_text += f"Diff for {file_path}:\n\n{diff_data}\n\n"
+                else:
+                    raise UnicodeDecodeError(
+                        "chardet unable to guess encoding", b"", 0, 1, "No encoding detected")
         except UnicodeDecodeError:
-            # If there is a UnicodeDecodeError, note it and skip the file
-            diff_text += f"Error decoding file: {file_path} (may contain non-text content)\n"
+            # If there is a UnicodeDecodeError or chardet cannot guess the encoding,
+            # note it and skip the file
+            diff_text += f"Error decoding file: {file_path} (may contain non-text content or encoding is unknown)\n"
 
     return commit.hexsha, commit.message, diff_text
 
