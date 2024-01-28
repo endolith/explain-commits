@@ -95,7 +95,7 @@ if __name__ == "__main__":
     parser.add_argument("-i", "--include",
                         help="Comma-separated list of file extensions to "
                              "include. Defaults to .c,.h",
-                        default=".c,.h,.htm,.py,.BAT")
+                        default=".c,.xc,.h,.htm,.txt,.py,.BAT")
 
     args = parser.parse_args()
     include_extensions = tuple(args.include.split(','))
