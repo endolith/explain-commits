@@ -70,8 +70,8 @@ def send_to_gpt_and_save(commit_hash, commit_message, diff_text, repo_path):
                            'system_message.txt'), 'r') as file:
         system_message = file.read()
 
-    user_message = "Commit Message:\n```\n" + commit_message + \
-                   "```\n\nDiff:\n```diff\n" + diff_text + '\n```'
+    user_message = "Commit Message:\n````\n" + commit_message + \
+                   "````\n\nDiff:\n````diff\n" + diff_text + '\n````'
 
     response = client.chat.completions.create(
         model="gpt-3.5-turbo-16k",
