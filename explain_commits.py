@@ -51,7 +51,8 @@ def get_diff_text(repo_path, commit_hash=None,
         except UnicodeDecodeError:
             # If there is a UnicodeDecodeError or chardet cannot guess the encoding,
             # note it and skip the file
-            diff_text += f"Error decoding file: {file_path} (may contain non-text content or encoding is unknown)\n"
+            diff_text += (f"Error decoding file: {file_path} (may contain "
+                          "non-text content or encoding is unknown)\n")
 
     return commit.hexsha, commit.message, diff_text
 
