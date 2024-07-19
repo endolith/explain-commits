@@ -6,4 +6,6 @@ For binary files or build files, the diff content has been omitted to save token
 
 Do not describe each non-code file individually, just mention these changes in passing.  Do not say things like "Unfortunately, the diff is not available"; this is already understood.  Just analyze the commit as a whole, including what you know about changes to binary files.
 
+Be concise and do not repeat yourself.
+
 Respond using Markdown.
