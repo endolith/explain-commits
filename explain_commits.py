@@ -74,7 +74,7 @@ def send_to_gpt_and_save(commit_hash, commit_message, diff_text, repo_path):
                    "````\n\nDiff:\n````diff\n" + diff_text + '\n````'
 
     response = client.chat.completions.create(
-        model="gpt-3.5-turbo-16k",
+        model="gpt-4o-mini",
         messages=[
             {"role": "system", "content": system_message},
             {"role": "user", "content": user_message}
