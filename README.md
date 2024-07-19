@@ -1,17 +1,17 @@
 # GPT Explain Commits
 
-This script analyzes a specific git commit or the latest commit in a repository. It fetches the commit message and code diffs, and sends them to OpenAI's ChatGPT for a natural language explanation.
+This script analyzes a specific git commit or the latest commit in a repository. It fetches the commit message and code diffs, and sends them to OpenAI's ChatGPT API for a natural language explanation.
 
 ## Installation
 
 1. Clone the repository to your local machine.
-2. Install the required Python packages:
+2. Create a virtual environment using `conda`:
 
     ```shell
-    pip install gitpython openai python-dotenv
+    conda create --name explain_commits --file requirements.txt
     ```
 
-3. Create a `.env` file using the `.env.template` as a reference:
+3. Create a `.env` file in the same folder using the `.env.template` as a reference:
 
     ```shell
     cp .env.template .env
@@ -46,7 +46,8 @@ python explain_commits.py [repository_path]
 1. Open SmartGit and navigate to **Edit** → **Preferences** → **Tools**.
 2. Add a new tool with the following settings:
     - **Menu Item Name**: "GPT explain commit"
-    - **Command**: Path to Python executable
+    - **Command**: `C:\Users\username\anaconda3\envs\explain_commits\python.exe`
     - **Arguments**: `"[…]\explain_commits.py" -c ${commit} ${repositoryRootPath}`
+    - **Handles**: Commits
 
 Then this tool is available on the context menu for commits, which will output a `.md` file to the repo folder.
