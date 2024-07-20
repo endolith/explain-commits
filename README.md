@@ -46,7 +46,7 @@ python explain_commits.py [repository_path]
 1. Open SmartGit and navigate to **Edit** → **Preferences** → **Tools**.
 2. Add a new tool with the following settings:
     - **Menu Item Name**: "GPT explain commit"
-    - **Command**: `C:\Users\username\anaconda3\envs\explain_commits\python.exe`
+    - **Command**: `[…]\anaconda3\envs\explain_commits\python.exe`
     - **Arguments**: `"[…]\explain_commits.py" -c ${commit} ${repositoryRootPath}`
     - **Handles**: Commits
 
