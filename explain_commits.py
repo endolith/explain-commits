@@ -47,7 +47,8 @@ def get_diff_text(repo_path, commit_hash=None,
                     diff_text += f"Diff for {file_path}:\n\n{diff_data}\n\n"
                 else:
                     raise UnicodeDecodeError(
-                        "chardet unable to guess encoding", b"", 0, 1, "No encoding detected")
+                        "chardet unable to guess encoding", b"", 0, 1,
+                        "No encoding detected")
         except UnicodeDecodeError:
             # If there is a UnicodeDecodeError or chardet cannot guess the encoding,
             # note it and skip the file
