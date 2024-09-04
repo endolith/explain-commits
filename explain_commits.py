@@ -30,9 +30,13 @@ def get_diff_text(repo_path, commit_hash=None,
         file_path = d.b_path or d.a_path
         _, file_extension = os.path.splitext(file_path)
 
-        # Skip files not in include_extensions
-        if file_extension not in include_extensions:
+        # Check both new and old file extensions
+        if (file_extension not in include_extensions and
+                (not d.a_path or d.a_path.split('.')[-1] not in include_extensions)):
             continue
+
+        if d.renamed:
+            diff_text += f"File renamed from {d.a_path} to {d.b_path}\n\n"
 
         try:
             # Attempt to read the diff text
