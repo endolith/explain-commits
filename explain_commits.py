@@ -14,7 +14,7 @@ client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 
 def get_diff_text(repo_path, commit_hash=None,
-                  include_extensions=('.c', '.h', '.htm', '.py', '.BAT')):
+                  include_extensions=('.c', '.h', '.htm', '.py', '.BAT', '.js')):
     repo = git.Repo(repo_path)
 
     # Get the specified commit, or default to the latest commit
@@ -112,7 +112,7 @@ if __name__ == "__main__":
     parser.add_argument("-i", "--include",
                         help="Comma-separated list of file extensions to "
                              "include. Defaults to .c,.h",
-                        default=".c,.xc,.h,.htm,.txt,.py,.BAT")
+                        default=".c,.xc,.h,.htm,.txt,.py,.BAT,.js")
 
     args = parser.parse_args()
     include_extensions = tuple(args.include.split(','))
