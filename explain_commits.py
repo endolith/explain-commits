@@ -12,9 +12,12 @@ load_dotenv()
 # Fetch the API key from the .env file
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
+# Default file extensions to include
+DEFAULT_INCLUDE_EXTENSIONS = ('.c', '.xc', '.h', '.htm', '.txt', '.py', '.bat', '.js')
+
 
 def get_diff_text(repo_path, commit_hash=None,
-                  include_extensions=('.c', '.h', '.htm', '.py', '.BAT', '.js')):
+                  include_extensions=DEFAULT_INCLUDE_EXTENSIONS):
     repo = git.Repo(repo_path)
 
     # Get the specified commit, or default to the latest commit
@@ -112,7 +115,7 @@ if __name__ == "__main__":
     parser.add_argument("-i", "--include",
                         help="Comma-separated list of file extensions to "
                              "include. Defaults to .c,.h",
-                        default=".c,.xc,.h,.htm,.txt,.py,.BAT,.js")
+                        default=",".join(DEFAULT_INCLUDE_EXTENSIONS))
 
     args = parser.parse_args()
     include_extensions = tuple(args.include.split(','))
