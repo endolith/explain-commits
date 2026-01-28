@@ -28,6 +28,10 @@ def get_diff_text(repo_path, commit_hash=None,
     diffs = parent.diff(commit, create_patch=True) if parent else []
 
     diff_text = ""
+    included_files = []
+    excluded_files = []
+    binary_files = []
+
     for d in diffs:
         # Determine the file path and its extension
         file_path = d.b_path or d.a_path
@@ -36,7 +40,10 @@ def get_diff_text(repo_path, commit_hash=None,
         # Check both new and old file extensions
         if (file_extension not in include_extensions and
                 (not d.a_path or d.a_path.split('.')[-1] not in include_extensions)):
+            excluded_files.append(file_path)
             continue
+
+        included_files.append(file_path)
 
         if d.renamed:
             diff_text += f"File renamed from {d.a_path} to {d.b_path}\n\n"
@@ -59,8 +66,18 @@ def get_diff_text(repo_path, commit_hash=None,
         except UnicodeDecodeError:
             # If there is a UnicodeDecodeError or chardet cannot guess the encoding,
             # note it and skip the file
+            binary_files.append(file_path)
             diff_text += (f"Error decoding file: {file_path} (may contain "
                           "non-text content or encoding is unknown)\n")
+
+    # Print summary
+    print(f"\nFile processing summary:")
+    print(f"  Included files ({len(included_files)}): {', '.join(included_files) if included_files else 'none'}")
+    if excluded_files:
+        print(f"  Excluded files ({len(excluded_files)}): {', '.join(excluded_files)}")
+    if binary_files:
+        print(f"  Binary files ({len(binary_files)}): {', '.join(binary_files)}")
+    print()
 
     return commit.hexsha, commit.message, diff_text
 
