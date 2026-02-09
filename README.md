@@ -1,3 +1,5 @@
+*This has pretty much been rendered obsolete by SmartGit's built-in [Explain Commit](https://www.smartgit.dev/whats-new/25_1/#explain_commits_summaries_on_demand) feature.*
+
 # GPT Explain Commits
 
 This script analyzes a specific git commit or the latest commit in a repository. It fetches the commit message and code diffs, and sends them to OpenAI's ChatGPT API for a natural language explanation.
